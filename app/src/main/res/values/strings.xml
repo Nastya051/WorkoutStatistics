@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">WorkoutStatistics</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Упражнения</string>
+    <string name="menu_gallery">Графики</string>
+    <string name="menu_slideshow">Таблицы</string>
+
+    <string name="name_exercise">Название упражнения:</string>
+    <string name="kg">КГ:</string>
+    <string name="repeat">Повторения:</string>
+    <string name="negative">Негативные</string>
+
+    <string-array name="exercises">
+        <item>Жим лежа</item>
+        <item>Тяга блока (трицепс)</item>
+        <item>Тяга блока (трицепс) на одну руку</item>
+        <item>Подъем гантелей на бицепс стоя</item>
+        <item>Подтягивания</item>
+        <item>Махи гантелей в стороны</item>
+    </string-array>
+</resources>
