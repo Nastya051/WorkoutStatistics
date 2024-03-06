@@ -1,6 +1,7 @@
 package com.example.workoutstatistics.ui.slideshow
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,7 @@ class TableFragment : Fragment() {
 
     private lateinit var _binding: FragmentTableBinding
 
-    lateinit var viewModel :TableViewModel
+    lateinit var viewModel: TableViewModel
 
     private val binding get() = _binding
     var exWList: List<ExercisesInWorkout>? = null
@@ -43,7 +44,8 @@ class TableFragment : Fragment() {
         val dao = (activity as MainActivity).db.getDao()
         val viewModelFactory = TableViewModelFactory(dao)
         viewModel = ViewModelProvider(
-            this, viewModelFactory).get(TableViewModel::class.java)
+            this, viewModelFactory
+        ).get(TableViewModel::class.java)
         return ComposeView(requireContext()).apply {
             setContent {
                 getCountOfWorkouts()
@@ -79,53 +81,70 @@ class TableFragment : Fragment() {
         )
     }
 
+    fun getTonnaList(): List<Double>{
+        var tonnaList = ArrayList<Double>()
+        var tonna = 0.0
+        for (q in 0 until cntW) {
+            for (i in 0 until exWList!![q].exercises.size){
+                val summa: Double =
+                    (exWList!![q].exercises[i].weigth * exWList!![q].exercises[i].repeat) + (exWList!![q].exercises[i].weigth * exWList!![q].exercises[i].negative / 2)
+                tonna += summa
+            }
+            tonnaList.add(tonna)
+            tonna = 0.0
+        }
+        return  tonnaList
+    }
+
     @Composable
     fun TableScreen() {
         getCountOfWorkouts()
         getFullListExercises()
         val myColor: Color = Color(0xFF7FDF92)
         val myColor2: Color = Color(0xFF84E0C4)
+        val tonnazh = getTonnaList()
         LazyColumn(
             Modifier
                 .fillMaxSize()
-                .padding(8.dp)) {
+                .padding(8.dp)
+        ) {
 
-            for(q in 0 until cntW){
-                var tonna: Double = 0.0
+            for (q in 0 until cntW) {
                 item {
-                Row(Modifier.background(myColor)) {
-                    TableCell(text = "${exWList!![q].workout.date}", weight = 1.0f)
-                }
-            }
-            item {
-                Row(Modifier.background(myColor2)) {
-                    TableCell(text = "Упражнение", weight = .3f)
-                    TableCell(text = "Кг", weight = .15f)
-                    TableCell(text = "Повторы", weight = .2f)
-                    TableCell(text = "Негатив.", weight = .2f)
-                    TableCell(text = "Сумма", weight = .15f)
-                }
-            }
-                for (i in 0 until exWList!![q].exercises.size) {
-                item {
-                    Row(Modifier.background(Color.White)) {
-                        TableCell(text = "${exWList!![q].exercises[i].name}", weight = .3f)
-                        TableCell(text = "${exWList!![q].exercises[i].weigth}", weight = .15f)
-                        TableCell(text = "${exWList!![q].exercises[i].repeat}", weight = .2f)
-                        TableCell(text = "${exWList!![q].exercises[i].negative}", weight = .2f)
-                        val summa: Double =  (exWList!![q].exercises[i].weigth * exWList!![q].exercises[i].repeat) + (exWList!![q].exercises[i].weigth * exWList!![q].exercises[i].negative/2)
-                        TableCell(text = "$summa", weight = .15f)
-                        tonna += summa
+                    Row(Modifier.background(myColor)) {
+                        TableCell(text = "${exWList!![q].workout.date}", weight = 1.0f)
                     }
                 }
-            }
-            item {
-                Row(Modifier.background(myColor2)) {
-                    TableCell(text = "Тоннаж", weight = .5f)
-                    TableCell(text = "$tonna", weight = .5f)
+                item {
+                    Row(Modifier.background(myColor2)) {
+                        TableCell(text = "Упражнение", weight = .3f)
+                        TableCell(text = "Кг", weight = .15f)
+                        TableCell(text = "Повторы", weight = .2f)
+                        TableCell(text = "Негатив.", weight = .2f)
+                        TableCell(text = "Сумма", weight = .15f)
+                    }
                 }
+                for (i in 0 until exWList!![q].exercises.size) {
+                    item {
+                        Row(Modifier.background(Color.White)) {
+                            TableCell(text = "${exWList!![q].exercises[i].name}", weight = .3f)
+                            TableCell(text = "${exWList!![q].exercises[i].weigth}", weight = .15f)
+                            TableCell(text = "${exWList!![q].exercises[i].repeat}", weight = .2f)
+                            TableCell(text = "${exWList!![q].exercises[i].negative}", weight = .2f)
+                            val summa: Double =
+                                (exWList!![q].exercises[i].weigth * exWList!![q].exercises[i].repeat) + (exWList!![q].exercises[i].weigth * exWList!![q].exercises[i].negative / 2)
+                            TableCell(text = "$summa", weight = .15f)
+                        }
+                    }
+                }
+                item {
+                    Row(Modifier.background(myColor2)) {
+                        TableCell(text = "Тоннаж", weight = .5f)
+                        TableCell(text = "${tonnazh[q]}", weight = .5f)
+                    }
+                }
+
             }
-        }
         }
     }
 
